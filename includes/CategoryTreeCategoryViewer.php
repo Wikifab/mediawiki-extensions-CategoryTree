@@ -354,11 +354,11 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']]',
+			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]|lang | layout=group',
 			'nolang' => true
 		];
 
-		if(isset($_GET['page'])) {
+        if(isset($_GET['page'])) {
 			$params['page'] = $_GET['page'];
 		}
 
