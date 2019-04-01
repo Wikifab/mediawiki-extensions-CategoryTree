@@ -24,7 +24,12 @@ class CategoryTreeImageList
         foreach ($subCategories as $subCategory){
             $title = Title::makeTitleSafe(NS_CATEGORY, $subCategory);
             $page = new DokitCategoryPage($title);
-            $images['Catégorie:'.$subCategory] = $page->getMainPicture()->getTitle()->getText();
+            $mainPicture = $page->getMainPicture();
+            if(isset($mainPicture)){
+                $images['Catégorie:'.$subCategory] = $mainPicture->getTitle()->getText();
+            } else {
+                $images['Catégorie:'.$subCategory] = null;
+            }
         }
 
         $this->images = $images;
