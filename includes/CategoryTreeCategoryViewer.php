@@ -354,7 +354,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
+			'query' => 'lang|layout=group|[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
 			'nolang' => true
 		];
 
@@ -373,7 +373,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 				'noAutoLoadOnScroll' => true
 			];
 
-			$ti = wfEscapeWikiText( $this->title->getText() );
+            $ti = wfEscapeWikiText( $this->title->getText() );
 
 			$out = "<div id=\"mw-manuals\">\n";
 			$out .= '<h2>' . $this->msg( 'category-manuals-header' )->parse() . '</h2>';
