@@ -338,7 +338,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$WfExploreCore = new \WfExploreCore();
 
-		$WfExploreCore->setNamespace(array('Manual'));
+		//$WfExploreCore->setNamespace(array('Manual'));
 		$WfExploreCore->setPageResultsLimit($limit);
 		$WfExploreCore->setFilters(array());
 
@@ -354,7 +354,8 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
+			'query' => '[[Category:'.$this->title->getText().']][[Manual:+]][[BookVisible::yes]]|lang|layout=group',
+			'nolang' => true
 		];
 
         if(isset($_GET['page'])) {
