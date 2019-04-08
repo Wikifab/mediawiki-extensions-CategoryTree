@@ -327,9 +327,9 @@ class CategoryTree {
 		if( ! $nodesInfo['title']) {
 			$label = 'Error no title';
 		} else if ( $hideprefix ) {
-		    if($wgEnableCategoryInternationalization){
-                $key = $nodesInfo['title']->getText();
-                $key = self::clean($key);
+            $key = $nodesInfo['title']->getText();
+            $key = CategoryManagerCore::clean($key);
+		    if($wgEnableCategoryInternationalization && wfMessage('dokit-category-title-' . $key)->exists()){
                 $label = wfMessage('dokit-category-title-' . $key);
             } else {
                 $label = htmlspecialchars($nodesInfo['title']->getText());
@@ -690,9 +690,9 @@ class CategoryTree {
 		// configuration setting
 		// patch contributed by Manuel Schneider <manuel.schneider@wikimedia.ch>, Bug 8011
 		if ( $hideprefix ) {
-            if ($wgEnableCategoryInternationalization) {
-                $key = $title->getText();
-                $key = self::clean($key);
+            $key = $title->getText();
+            $key = CategoryManagerCore::clean($key);
+            if ($wgEnableCategoryInternationalization && wfMessage('dokit-category-title-' . $key)->exists()) {
                 $label = wfMessage('dokit-category-title-' . $key);
             } else {
                 $label = htmlspecialchars($title->getText());
@@ -920,17 +920,4 @@ class CategoryTree {
 
 		return min( $depth, $max );
 	}
-
-    /**
-     * Clean the $string of special characters
-     * @param $string
-     * @return mixed|string|string[]|null cleand string
-     */
-    public static function clean($string)
-    {
-        $accents = 'ŠšŽžÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýþÿ';
-        $string = str_replace ( " ", '_', $string ); // Replaces all spaces with underscores.
-
-        return preg_replace ( '/[^'.$accents.'A-Za-z0-9\-_]/', '', $string ); // Removes special chars.
-    }
 }
