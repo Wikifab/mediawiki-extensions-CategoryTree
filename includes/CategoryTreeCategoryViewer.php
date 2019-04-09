@@ -355,7 +355,6 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$params = [
 			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
-			'nolang' => true,
         ];
 
         if(isset($_GET['page'])) {
