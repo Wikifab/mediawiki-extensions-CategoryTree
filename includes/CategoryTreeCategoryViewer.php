@@ -182,7 +182,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$r = $this->getSubcategorySection();
 
 		foreach ($wgCategorySections as $categorySection){
-		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
+		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template'], $categorySection['loadmore']);
         }
 
 		$r .=
@@ -391,13 +391,12 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 	}
 
-	function getSection($title, $query, $template){
+	function getSection($title, $query, $template, $loadmore){
         $WfExploreCore = new \WfExploreCore();
 
         $queryTemp = $query;
-        if(preg_match('/\[\[(.*):\+/', $query, $matches) == 1){
-            $namespace = array($matches[1]);
-            $WfExploreCore->setNamespace($namespace);
+        if(preg_match_all('/\[([^\[]*):\+/', $query, $matches) > 0){
+            $WfExploreCore->setNamespace($matches[1]);
             $queryTemp = preg_replace('/\[\[(.*):\+\]\]/', "", $query);
         }
 
@@ -434,6 +433,9 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
                 'isEmbed' => true,
                 'noAutoLoadOnScroll' => true
             ];
+            if($loadmore){
+                $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmoremanuals-label' )->parse();
+            }
 
             $out .= '<div>';
             $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
