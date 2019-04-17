@@ -168,6 +168,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	 * @return string HTML output
 	 */
 	public function getHTML() {
+	    global $wgCategorySections;
 
 		$this->showGallery = $this->getConfig()->get( 'CategoryMagicGallery' )
 			&& !$this->getOutput()->mNoGallery;
@@ -178,9 +179,15 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$r = '';
 
-		$r = $this->getSubcategorySection() .
-			$this->getManualsSection() .
-			$this->getPagesSection() .
+		$r = $this->getSubcategorySection();
+
+		foreach ($wgCategorySections as $categorySection){
+		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
+        }
+
+		$r .=
+			//$this->getManualsSection() .
+			//$this->getPagesSection() .
 			$this->getLatestDiscussionsSection() .
 			parent::getPagesSection() .
 			$this->getImageSection()
@@ -354,11 +361,10 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']]',
-			'nolang' => true
-		];
+			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
+        ];
 
-		if(isset($_GET['page'])) {
+        if(isset($_GET['page'])) {
 			$params['page'] = $_GET['page'];
 		}
 
@@ -373,7 +379,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 				'noAutoLoadOnScroll' => true
 			];
 
-			$ti = wfEscapeWikiText( $this->title->getText() );
+            $ti = wfEscapeWikiText( $this->title->getText() );
 
 			$out = "<div id=\"mw-manuals\">\n";
 			$out .= '<h2>' . $this->msg( 'category-manuals-header' )->parse() . '</h2>';
@@ -384,6 +390,58 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		}
 
 	}
+
+	function getSection($title, $query, $template){
+        $WfExploreCore = new \WfExploreCore();
+
+        $queryTemp = $query;
+        if(preg_match('/\[\[(.*):\+/', $query, $matches) == 1){
+            $namespace = array($matches[1]);
+            $WfExploreCore->setNamespace($namespace);
+            $queryTemp = preg_replace('/\[\[(.*):\+\]\]/', "", $query);
+        }
+
+        $queryTemp = explode("|", $queryTemp)[0];
+
+        if(isset($template)) {
+            $formatter = new \WikifabExploreResultFormatter();
+            $formatter->setTemplate($template);
+            $WfExploreCore->setFormatter($formatter);
+        }
+
+        $params['query'] = '[[Category:'.$this->title->getText().']]'.$queryTemp;
+        $queryParams = array_slice(explode("|", $query), 1);
+        foreach ($queryParams as $queryParam){
+            if(strpos($queryParam, "=")){
+                $queryParam = explode("=", $queryParam);
+                $params[$queryParam[0]] = $queryParam[1];
+            } else {
+                $params[$queryParam] = true;
+            }
+        }
+
+        if(isset($_GET['page'])) {
+            $params['page'] = $_GET['page'];
+        }
+
+        $WfExploreCore->executeSearch( $request = null , $params);
+
+        $out = '';
+
+        if ($WfExploreCore->getNbResults() > 0) {
+            $paramsOutput = [
+                'showPreviousButton' => false,
+                'isEmbed' => true,
+                'noAutoLoadOnScroll' => true
+            ];
+
+            $out .= '<div>';
+            $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
+            $out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
+            $out .= '</div>';
+        }
+        return $out;
+    }
 
 	/**
 	 *
