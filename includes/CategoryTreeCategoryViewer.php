@@ -362,6 +362,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$params = [
 			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
+            'nolang' => true
         ];
 
         if(isset($_GET['page'])) {
@@ -407,6 +408,9 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
             $formatter->setTemplate($template);
             $WfExploreCore->setFormatter($formatter);
         }
+
+        $limit = 6;
+        $WfExploreCore->setPageResultsLimit($limit);
 
         $params['query'] = '[[Category:'.$this->title->getText().']]'.$queryTemp;
         $queryParams = array_slice(explode("|", $query), 1);
