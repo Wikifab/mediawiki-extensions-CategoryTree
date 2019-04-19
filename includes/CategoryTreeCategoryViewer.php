@@ -361,8 +361,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
-            'nolang' => true
+			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]'
         ];
 
         if(isset($_GET['page'])) {
@@ -438,7 +437,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
                 'noAutoLoadOnScroll' => true
             ];
             if($loadmore){
-                $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmoremanuals-label' )->parse();
+                $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmore-label' )->parse();
             }
 
             $out .= '<div>';
