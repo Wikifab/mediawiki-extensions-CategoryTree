@@ -20,7 +20,7 @@ class CategoryTreeImageList
      */
     public function __construct(Title $category){
         $images = [];
-        $subCategories = CategoryManagerCore::getSubCategories($category->getText());
+        $subCategories = CategoryTreeCore::getSubCategories($category->getText());
         foreach ($subCategories as $subCategory){
             $title = Title::makeTitleSafe(NS_CATEGORY, $subCategory);
             $page = new DokitCategoryPage($title);

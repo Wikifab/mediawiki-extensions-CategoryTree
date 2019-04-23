@@ -128,4 +128,38 @@ class CategoryTreeCore {
 		return $result;
 	}
 
+    /**
+     * Get the subcategories of the $categoryTitle category
+     * @param $categoryTitle
+     * @return array
+     */
+    public static function getSubCategories($categoryTitle)
+    {
+        $dbr = wfGetDB(DB_SLAVE);
+
+        $categoryTitle = str_replace( '+', '/', str_replace( ' ', '_', $categoryTitle) );
+
+        //Get the subcategories of the $categoryTitle category
+        $subCategoriesResult = $dbr->select(
+            ['page', 'categorylinks'],
+            ['page_title'],
+            ['cl_to' => $categoryTitle, 'page_namespace' => NS_CATEGORY],
+            __METHOD__,
+            [],
+            ['categorylinks' => ['INNER JOIN', 'page_id=cl_from']]
+        );
+
+
+        $subCategories = array();
+
+        //Get the title of each subcategory
+        foreach ( $subCategoriesResult as $subCategory ) {
+            $subCategories[] = str_replace('_', ' ', $subCategory->page_title);
+        }
+
+        asort( $subCategories );
+
+        return $subCategories;
+    }
+
 }
