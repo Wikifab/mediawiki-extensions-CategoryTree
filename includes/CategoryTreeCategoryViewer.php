@@ -181,13 +181,13 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$r = $this->getSubcategorySection();
 
-		/*foreach ($wgCategorySections as $categorySection){
+		foreach ($wgCategorySections as $categorySection){
 		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template'], $categorySection['loadmore']);
-        }*/
+        }
 
 		$r .=
-			$this->getManualsSection() .
-			$this->getPagesSection() .
+			//$this->getManualsSection() .
+			//$this->getPagesSection() .
 			$this->getLatestDiscussionsSection() .
 			parent::getPagesSection() .
 			$this->getImageSection()
