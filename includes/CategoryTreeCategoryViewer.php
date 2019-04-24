@@ -182,7 +182,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$r = $this->getSubcategorySection();
 
 		foreach ($wgCategorySections as $categorySection){
-		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template'], $categorySection['loadmore']);
+		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
         }
 
 		$r .=
@@ -282,7 +282,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	/**
 	 * @return string
 	 */
-	function getPagesSection() {
+	/*function getPagesSection() {
 		global $wgOut;
 
 		$out = '';
@@ -326,12 +326,12 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		// if there is no tutorial, display default category page :
 		return $out;
-	}
+	}*/
 
 	/**
 	 *
 	 */
-	function getManualsSection(){
+	/*function getManualsSection(){
 		global $IP;
 		global $wgExploreResultsLayouts ;
 
@@ -389,9 +389,9 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 			return $out;
 		}
 
-	}
+	}*/
 
-	function getSection($title, $query, $template, $loadmore){
+	function getSection($title, $query, $template){
         $WfExploreCore = new \WfExploreCore();
 
         $queryTemp = $query;
@@ -436,9 +436,9 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
                 'isEmbed' => true,
                 'noAutoLoadOnScroll' => true
             ];
-            if($loadmore){
+            /*if($loadmore){
                 $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmore-label' )->parse();
-            }
+            }*/
 
             $out .= '<div>';
             $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
