@@ -19,20 +19,20 @@ class CategoryTreeImageList
      * @throws MWException
      */
     public function __construct(Title $category){
-        // Create request for getting image
-        $request = new FauxRequest([
-            'action' => 'ask',
-            'query' => '[[Subcategory of::'.$category->getText().']]|?Main_Picture'
-        ], false, null);
+        $images = [];
+        $subCategories = CategoryTreeCore::getSubCategories($category->getText());
+        foreach ($subCategories as $subCategory){
+            $title = Title::makeTitleSafe(NS_CATEGORY, $subCategory);
+            $page = new DokitCategoryPage($title);
+            $mainPicture = $page->getMainPicture();
+            if(isset($mainPicture)){
+                $images['Catégorie:'.$subCategory] = $mainPicture->getTitle()->getText();
+            } else {
+                $images['Catégorie:'.$subCategory] = null;
+            }
+        }
 
-        $api = new ApiMain($request);
-        $api->execute();
-
-        // Get result data
-        $data = $api->getResult()->getResultData(['query', 'results']);
-
-        // Return formatted array
-        $this->images = array_map([$this, 'formatDataRow'], $data);
+        $this->images = $images;
     }
 
     /**
