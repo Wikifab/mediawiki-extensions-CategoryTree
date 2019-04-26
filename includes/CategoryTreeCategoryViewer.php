@@ -186,8 +186,6 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
         }
 
 		$r .=
-			//$this->getManualsSection() .
-			//$this->getPagesSection() .
 			$this->getLatestDiscussionsSection() .
 			parent::getPagesSection() .
 			$this->getImageSection()
@@ -282,7 +280,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	/**
 	 * @return string
 	 */
-	function getPagesSection() {
+	/*function getPagesSection() {
 		global $wgOut;
 
 		$out = '';
@@ -326,12 +324,12 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		// if there is no tutorial, display default category page :
 		return $out;
-	}
+	}*/
 
 	/**
 	 *
 	 */
-	function getManualsSection(){
+	/*function getManualsSection(){
 		global $IP;
 		global $wgExploreResultsLayouts ;
 
@@ -389,7 +387,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 			return $out;
 		}
 
-	}
+	}*/
 
 	function getSection($title, $query, $template, $loadmore){
         $WfExploreCore = new \WfExploreCore();
