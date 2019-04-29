@@ -432,7 +432,6 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
             $paramsOutput = [
                 'showPreviousButton' => false,
                 'isEmbed' => true,
-                'noAutoLoadOnScroll' => true
             ];
             if($loadmore){
                 $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmore-label' )->parse();
