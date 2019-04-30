@@ -10,6 +10,8 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	 */
 	public $categorytree;
 
+	private $loadSpinnerId = 0;
+
 	/**
 	 * @return CategoryTree
 	 */
@@ -176,8 +178,6 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$this->clearCategoryState();
 		$this->doCategoryQuery();
 		$this->finaliseCategoryState();
-
-		$r = '';
 
 		$r = $this->getSubcategorySection();
 
@@ -359,7 +359,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$WfExploreCore->setFormatter($formatter);
 
 		$params = [
-			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]'
+			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
         ];
 
         if(isset($_GET['page'])) {
@@ -432,6 +432,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
             $paramsOutput = [
                 'showPreviousButton' => false,
                 'isEmbed' => true,
+                'noAutoLoadOnScroll' => true
             ];
             if($loadmore){
                 $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmore-label' )->parse();
@@ -439,6 +440,10 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
             $out .= '<div>';
             $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
+            if($loadmore){
+                $out .= '<div class="loader_container"><div class="loader exploreLoader'.$this->loadSpinnerId.'" style="display:none"><i class="fa fa-spinner fa-pulse"></i></div></div>';
+                $this->loadSpinnerId++;
+            }
             $out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
             $out .= '</div>';
         }
