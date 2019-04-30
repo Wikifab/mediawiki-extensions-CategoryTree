@@ -182,7 +182,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$r = $this->getSubcategorySection();
 
 		foreach ($wgCategorySections as $categorySection){
-		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template'], $categorySection['loadmore']);
+		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
         }
 
 		$r .=
@@ -360,6 +360,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$params = [
 			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
+            'nolang' => true
         ];
 
         if(isset($_GET['page'])) {
@@ -389,7 +390,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 	}*/
 
-	function getSection($title, $query, $template, $loadmore){
+	function getSection($title, $query, $template){
         $WfExploreCore = new \WfExploreCore();
 
         $queryTemp = $query;
@@ -432,18 +433,14 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
             $paramsOutput = [
                 'showPreviousButton' => false,
                 'isEmbed' => true,
-                'noAutoLoadOnScroll' => true
+                'noAutoLoadOnScroll' => true,
+                'loadMoreLabel' => $this->msg( 'categorytree-loadmore-label' )->parse()
             ];
-            if($loadmore){
-                $paramsOutput['loadMoreLabel'] = $this->msg( 'categorytree-loadmore-label' )->parse();
-            }
 
             $out .= '<div>';
             $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
-            if($loadmore){
-                $out .= '<div class="loader_container"><div class="loader exploreLoader'.$this->loadSpinnerId.'" style="display:none"><i class="fa fa-spinner fa-pulse"></i></div></div>';
-                $this->loadSpinnerId++;
-            }
+            $out .= '<div class="loader_container"><div class="loader exploreLoader'.$this->loadSpinnerId.'" style="display:none"><i class="fa fa-spinner fa-pulse"></i></div></div>';
+            $this->loadSpinnerId++;
             $out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
             $out .= '</div>';
         }
