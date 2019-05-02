@@ -294,7 +294,8 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 			$params = array();
 			$WfExploreCore->setPageResultsLimit($limit);
-			$params['query'] = '[[Category:'.$this->title->getText().']]' ;
+			// "[[:+]]" is for select only pages from namespace NS_MAIN
+			$params['query'] = '[[:+]][[Category:'.$this->title->getText().']]' ;
 
 			if(isset($_GET['page'])) {
 				$params['page'] = $_GET['page'];
@@ -360,7 +361,6 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
 		$params = [
 			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
-            'nolang' => true
         ];
 
         if(isset($_GET['page'])) {
