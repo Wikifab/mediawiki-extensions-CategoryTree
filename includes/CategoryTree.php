@@ -307,7 +307,6 @@ class CategoryTree {
 	 * @param array $nodesInfo
 	 */
 	protected function getHtmlBreadcrumbs($nodesInfo,$index =0) {
-	    global $wgEnableCategoryInternationalization;
 
 		$hideprefix = $this->getOption( 'hideprefix' );
 		$ns = $nodesInfo['title']->getNamespace();
@@ -329,7 +328,7 @@ class CategoryTree {
 		} else if ( $hideprefix ) {
             $key = $nodesInfo['title']->getText();
             $key = CategoryManagerCore::clean($key);
-		    if($wgEnableCategoryInternationalization && wfMessage('dokit-category-title-' . $key)->exists()){
+		    if(wfMessage('dokit-category-title-' . $key)->exists()){
                 $label = wfMessage('dokit-category-title-' . $key);
             } else {
                 $label = htmlspecialchars($nodesInfo['title']->getText());
@@ -667,7 +666,6 @@ class CategoryTree {
      * @return string
      */
 	function renderNodeInfo( $title, $cat, $children = 0, File $image = null) {
-        global $wgEnableCategoryInternationalization;
 
 		$mode = $this->getOption( 'mode' );
 
@@ -692,7 +690,7 @@ class CategoryTree {
 		if ( $hideprefix ) {
             $key = $title->getText();
             $key = CategoryManagerCore::clean($key);
-            if ($wgEnableCategoryInternationalization && wfMessage('dokit-category-title-' . $key)->exists()) {
+            if (wfMessage('dokit-category-title-' . $key)->exists()) {
                 $label = wfMessage('dokit-category-title-' . $key);
             } else {
                 $label = htmlspecialchars($title->getText());

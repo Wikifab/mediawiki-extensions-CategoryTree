@@ -10,6 +10,8 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	 */
 	public $categorytree;
 
+	private $loadSpinnerId = 0;
+
 	/**
 	 * @return CategoryTree
 	 */
@@ -168,6 +170,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 	 * @return string HTML output
 	 */
 	public function getHTML() {
+	    global $wgCategorySections;
 
 		$this->showGallery = $this->getConfig()->get( 'CategoryMagicGallery' )
 			&& !$this->getOutput()->mNoGallery;
@@ -176,11 +179,13 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$this->doCategoryQuery();
 		$this->finaliseCategoryState();
 
-		$r = '';
+		$r = $this->getSubcategorySection();
 
-		$r = $this->getSubcategorySection() .
-			$this->getManualsSection() .
-			$this->getPagesSection() .
+		foreach ($wgCategorySections as $categorySection){
+		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
+        }
+
+		$r .=
 			$this->getLatestDiscussionsSection() .
 			parent::getPagesSection() .
 			$this->getImageSection()
@@ -271,119 +276,62 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		return $out;
 	}
 
+	function getSection($title, $query, $template){
+        $WfExploreCore = new \WfExploreCore();
 
-	/**
-	 * @return string
-	 */
-	function getPagesSection() {
-		global $wgOut;
+        $queryTemp = $query;
+        if(preg_match_all('/\[([^\[]*):\+/', $query, $matches) > 0){
+            $WfExploreCore->setNamespace($matches[1]);
+            $queryTemp = preg_replace('/\[\[(.*):\+\]\]/', "", $query);
+        }
 
-		$out = '';
-		// print Tutorials parts
-		if(count($this->articlesTitles) > 0) {
+        $queryTemp = explode("|", $queryTemp)[0];
 
-			$limit = 8;
+        if(isset($template)) {
+            $formatter = new \WikifabExploreResultFormatter();
+            $formatter->setTemplate($template);
+            $WfExploreCore->setFormatter($formatter);
+        }
 
-			$wgOut->addModules( 'ext.wikifab.wfExplore.js');
-			$WfExploreCore = new WfExploreCore();
+        $limit = 6;
+        $WfExploreCore->setPageResultsLimit($limit);
 
-			$params = array();
-			$WfExploreCore->setPageResultsLimit($limit);
-			// "[[:+]]" is for select only pages from namespace NS_MAIN
-			$params['query'] = '[[:+]][[Category:'.$this->title->getText().']]' ;
-
-			if(isset($_GET['page'])) {
-				$params['page'] = $_GET['page'];
-			}
-
-			$WfExploreCore->executeSearch( $request = null , $params);
-
-			$r = "";
-
-			$out = '';
-			//$out .= $WfExploreCore->getHtmlForm();
-
-			$paramsOutput = [
-					'showPreviousButton' => false,
-					'isEmbed' => true,
-					'noAutoLoadOnScroll' => true
-			];
-			$r .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
-
-			$ti = wfEscapeWikiText( $this->title->getText() );
-
-			$out .= "<div id=\"mw-dokit-pages\">\n";
-			$out .= '<h2>' . $this->msg( 'category_tutoriels_header' )->parse() . "</h2>\n";
-			$out .= $r;
-			$out .= "\n</div>";
-		}
-
-		// if there is no tutorial, display default category page :
-		return $out;
-	}
-
-	/**
-	 *
-	 */
-	function getManualsSection(){
-		global $IP;
-		global $wgExploreResultsLayouts ;
-
-
-		// Stop if GroupsPage extension doesn't exists, do not generate Manuals list
-		if(!file_exists("$IP/extensions/GroupsPage/GroupsPage.php")){
-			return '';
-		}
-
-		$limit = 6;
-
-		$WfExploreCore = new \WfExploreCore();
-
-		$WfExploreCore->setNamespace(array('Manual'));
-		$WfExploreCore->setPageResultsLimit($limit);
-		$WfExploreCore->setFilters(array());
-
-		$formatter = new \WikifabExploreResultFormatter();
-
-		$layout = __DIR__ . '/../../GroupsPage/layout/layout-group-search-result.html';
-		if(isset($wgExploreResultsLayouts['group'])) {
-			$layout = $wgExploreResultsLayouts['group'];
-		}
-		// $wgExploreResultsLayouts = ['group' => __DIR__ . '/extensions/WfextStyle/templates/layout-group-search-result.html'];
-		$formatter->setTemplate($layout);
-
-		$WfExploreCore->setFormatter($formatter);
-
-		$params = [
-			'query' => '[[Category:'.$this->title->getText().']][[BookVisible::yes]]',
-        ];
+        $params['query'] = '[[Category:'.$this->title->getText().']]'.$queryTemp;
+        $queryParams = array_slice(explode("|", $query), 1);
+        foreach ($queryParams as $queryParam){
+            if(strpos($queryParam, "=")){
+                $queryParam = explode("=", $queryParam);
+                $params[$queryParam[0]] = $queryParam[1];
+            } else {
+                $params[$queryParam] = true;
+            }
+        }
 
         if(isset($_GET['page'])) {
-			$params['page'] = $_GET['page'];
-		}
+            $params['page'] = $_GET['page'];
+        }
 
-		$WfExploreCore->executeSearch( $request = null , $params);
+        $WfExploreCore->executeSearch( $request = null , $params);
 
-		if ($WfExploreCore->getNbResults() > 0) {
+        $out = '';
 
-			$paramsOutput = [
-				'showPreviousButton' => false,
-				'isEmbed' => true,
-				'loadMoreLabel' => $this->msg( 'categorytree-loadmoremanuals-label' )->parse(),
-				'noAutoLoadOnScroll' => true
-			];
+        if ($WfExploreCore->getNbResults() > 0) {
+            $paramsOutput = [
+                'showPreviousButton' => false,
+                'isEmbed' => true,
+                'noAutoLoadOnScroll' => true,
+                'loadMoreLabel' => $this->msg( 'categorytree-loadmore-label' )->parse()
+            ];
 
-            $ti = wfEscapeWikiText( $this->title->getText() );
-
-			$out = "<div id=\"mw-manuals\">\n";
-			$out .= '<h2>' . $this->msg( 'category-manuals-header' )->parse() . '</h2>';
-			$out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
-			$out .= "\n</div>";
-
-			return $out;
-		}
-
-	}
+            $out .= '<div>';
+            $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
+            $out .= '<div class="loader_container"><div class="loader exploreLoader'.$this->loadSpinnerId.'" style="display:none"><i class="fa fa-spinner fa-pulse"></i></div></div>';
+            $this->loadSpinnerId++;
+            $out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
+            $out .= '</div>';
+        }
+        return $out;
+    }
 
 	/**
 	 *
