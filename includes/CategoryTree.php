@@ -326,13 +326,14 @@ class CategoryTree {
 		if( ! $nodesInfo['title']) {
 			$label = 'Error no title';
 		} else if ( $hideprefix ) {
-            $key = $nodesInfo['title']->getText();
-            $key = CategoryManagerCore::clean($key);
-		    if(wfMessage('dokit-category-title-' . $key)->exists()){
-                $label = wfMessage('dokit-category-title-' . $key);
-            } else {
-                $label = htmlspecialchars($nodesInfo['title']->getText());
-            }
+            $label = htmlspecialchars($nodesInfo['title']->getText());
+			if(class_exists('CategoryManagerCore')){
+				$key = CategoryManagerCore::clean($nodesInfo['title']->getText());
+				$messageKey = "dokit-category-title-" . $key;
+				if(wfMessage($messageKey)->exists()){
+					$label = wfMessage($messageKey);
+				}
+			}
         } else {
 			$label = htmlspecialchars( $nodesInfo['title']->getPrefixedText() );
 		}
@@ -688,13 +689,14 @@ class CategoryTree {
 		// configuration setting
 		// patch contributed by Manuel Schneider <manuel.schneider@wikimedia.ch>, Bug 8011
 		if ( $hideprefix ) {
-            $key = $title->getText();
-            $key = CategoryManagerCore::clean($key);
-            if (wfMessage('dokit-category-title-' . $key)->exists()) {
-                $label = wfMessage('dokit-category-title-' . $key);
-            } else {
-                $label = htmlspecialchars($title->getText());
-            }
+            $label = htmlspecialchars($title->getText());
+			if(class_exists('CategoryManagerCore')){
+				$key = CategoryManagerCore::clean($title->getText());
+				$messageKey = "dokit-category-title-" . $key;
+				if(wfMessage($messageKey)->exists()){
+					$label = wfMessage($messageKey);
+				}
+			}
 		} else {
 			$label = htmlspecialchars( $title->getPrefixedText() );
 		}
