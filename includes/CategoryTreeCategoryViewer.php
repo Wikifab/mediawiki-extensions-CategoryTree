@@ -182,7 +182,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$r = $this->getSubcategorySection();
 
 		foreach ($wgCategorySections as $categorySection){
-		    $r .= $this->getSection($categorySection['title'], $categorySection['query'], $categorySection['template']);
+		    $r .= $this->getSection($categorySection['title'], $categorySection['id'], $categorySection['query'], $categorySection['template']);
         }
 
 		$r .=
@@ -276,7 +276,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		return $out;
 	}
 
-	function getSection($title, $query, $template){
+	function getSection($title, $id, $query, $template){
         $WfExploreCore = new \WfExploreCore();
 
         $queryTemp = $query;
@@ -313,7 +313,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 
         $WfExploreCore->executeSearch( $request = null , $params);
 
-        $out = '';
+        $out = '<div id="'.$id.'">';
 
         if ($WfExploreCore->getNbResults() > 0) {
             $paramsOutput = [
@@ -323,13 +323,12 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
                 'loadMoreLabel' => $this->msg( 'categorytree-loadmore-label' )->parse()
             ];
 
-            $out .= '<div>';
             $out .= '<h2>' . $this->msg($title)->parse() . '</h2>';
             $out .= '<div class="loader_container"><div class="loader exploreLoader'.$this->loadSpinnerId.'" style="display:none"><i class="fa fa-spinner fa-pulse"></i></div></div>';
             $this->loadSpinnerId++;
             $out .= $WfExploreCore->getSearchResultsHtml($paramsOutput);
-            $out .= '</div>';
         }
+        $out .= '</div>';
         return $out;
     }
 
