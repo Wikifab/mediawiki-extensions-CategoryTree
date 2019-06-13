@@ -328,11 +328,7 @@ class CategoryTree {
 		} else if ( $hideprefix ) {
             $label = htmlspecialchars($nodesInfo['title']->getText());
 			if(class_exists('CategoryManagerCore')){
-				$key = CategoryManagerCore::clean($nodesInfo['title']->getText());
-				$messageKey = "dokit-category-title-" . $key;
-				if(wfMessage($messageKey)->exists()){
-					$label = wfMessage($messageKey);
-				}
+				$label = htmlspecialchars(CategoryManagerCore::getTranslatedCategoryTitle($nodesInfo['title']));
 			}
         } else {
 			$label = htmlspecialchars( $nodesInfo['title']->getPrefixedText() );
@@ -691,11 +687,7 @@ class CategoryTree {
 		if ( $hideprefix ) {
             $label = htmlspecialchars($title->getText());
 			if(class_exists('CategoryManagerCore')){
-				$key = CategoryManagerCore::clean($title->getText());
-				$messageKey = "dokit-category-title-" . $key;
-				if(wfMessage($messageKey)->exists()){
-					$label = wfMessage($messageKey);
-				}
+				$label = htmlspecialchars(CategoryManagerCore::getTranslatedCategoryTitle($nodesInfo['title']));
 			}
 		} else {
 			$label = htmlspecialchars( $title->getPrefixedText() );
