@@ -687,7 +687,7 @@ class CategoryTree {
 		if ( $hideprefix ) {
             $label = htmlspecialchars($title->getText());
 			if(class_exists('CategoryManagerCore')){
-				$label = htmlspecialchars(CategoryManagerCore::getTranslatedCategoryTitle($nodesInfo['title']));
+				$label = htmlspecialchars(CategoryManagerCore::getTranslatedCategoryTitle($title));
 			}
 		} else {
 			$label = htmlspecialchars( $title->getPrefixedText() );
