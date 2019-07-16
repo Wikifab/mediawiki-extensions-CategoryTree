@@ -344,7 +344,7 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		}
 
 		// Get category title
-		$ti = wfEscapeWikiText( $this->title->getText() );
+		$ti = $this->title->getText();
 
 		// Get Special::NewDiscussion title instance to generate link
 		$newDiscussionTitle = Title::makeTitleSafe(NS_SPECIAL, "NewDiscussion");
