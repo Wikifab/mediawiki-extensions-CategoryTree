@@ -162,4 +162,55 @@ class CategoryTreeCore {
         return $subCategories;
     }
 
+    /**
+	 * Set the categories for the explore category filter
+	 * @param $categories
+	 */
+	public static function setDynamicFilters(){
+		global $wfexploreDynamicsFilters, $wfexploreCategoriesNames;
+
+		$wfexploreCategoriesNames['Category'] = wfMessage('dokit-category-title-Categories');
+
+		$values = [];
+		$depth = 20;
+		$categories = self::getSubCategories('Categories');
+		if(class_exists('CategoryManagerCore')){
+			foreach ($categories as $category){
+				self::getAllCategories($category, $depth, $values);
+				$category = CategoryManagerCore::clean($category);
+				$values[$category] = $category;
+			}
+		} else {
+			foreach ($categories as $category){
+				$values[$category] = $category;
+			}
+		}
+
+		$wfexploreDynamicsFilters['Category'] = [
+			'name' => 'Category',
+			'translate_prefix' => 'dokit-category-title-',
+			'values' => $values
+		];
+
+	}
+
+	/**
+	 * Put the subcategories of category in values
+	 * @param $category
+	 * @param $depth
+	 * @param $values
+	 */
+	public static function getAllCategories($category, $depth, &$values){
+		if($depth === 0){
+			return;
+		}
+		$subCategories = self::getSubCategories($category);
+		foreach ($subCategories as $subCategory){
+			self::getAllCategories($subCategory, $depth - 1, $values);
+			if(class_exists('CategoryManagerCore')){
+				$subCategory = CategoryManagerCore::clean($subCategory);
+			}
+			$values[$subCategory] = $subCategory;
+		}
+	}
 }
