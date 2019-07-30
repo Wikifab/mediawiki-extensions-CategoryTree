@@ -174,16 +174,9 @@ class CategoryTreeCore {
 		$values = [];
 		$depth = 20;
 		$categories = self::getSubCategories('Categories');
-		if(class_exists('CategoryManagerCore')){
-			foreach ($categories as $category){
-				self::getAllCategories($category, $depth, $values);
-				$category = CategoryManagerCore::clean($category);
-				$values[$category] = $category;
-			}
-		} else {
-			foreach ($categories as $category){
-				$values[$category] = $category;
-			}
+		foreach ($categories as $category){
+			self::getAllCategories($category, $depth, $values);
+			$values[$category] = $category;
 		}
 
 		$wfexploreDynamicsFilters['Category'] = [
@@ -207,9 +200,6 @@ class CategoryTreeCore {
 		$subCategories = self::getSubCategories($category);
 		foreach ($subCategories as $subCategory){
 			self::getAllCategories($subCategory, $depth - 1, $values);
-			if(class_exists('CategoryManagerCore')){
-				$subCategory = CategoryManagerCore::clean($subCategory);
-			}
 			$values[$subCategory] = $subCategory;
 		}
 	}
