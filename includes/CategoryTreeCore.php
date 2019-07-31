@@ -173,11 +173,7 @@ class CategoryTreeCore {
 
 		$values = [];
 		$depth = 20;
-		$categories = self::getSubCategories('Categories');
-		foreach ($categories as $category){
-			self::getAllCategories($category, $depth, $values);
-			$values[$category] = $category;
-		}
+		self::getSubCategoriesRecursive('Categories', $depth, $values);
 
 		if(!empty($values)){
 			$wfexploreDynamicsFilters['Category'] = [
@@ -195,13 +191,13 @@ class CategoryTreeCore {
 	 * @param $depth
 	 * @param $values
 	 */
-	public static function getAllCategories($category, $depth, &$values){
+	public static function getSubCategoriesRecursive($category, $depth, &$values){
 		if($depth === 0){
 			return;
 		}
 		$subCategories = self::getSubCategories($category);
 		foreach ($subCategories as $subCategory){
-			self::getAllCategories($subCategory, $depth - 1, $values);
+			self::getSubCategoriesRecursive($subCategory, $depth - 1, $values);
 			$values[$subCategory] = $subCategory;
 		}
 	}

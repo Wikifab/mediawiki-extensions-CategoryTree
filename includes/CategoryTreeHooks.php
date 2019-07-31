@@ -72,8 +72,6 @@ class CategoryTreeHooks {
 		}
 
 		$wgHooks['MakeGlobalVariablesScript'][] = 'CategoryTreeHooks::getConfigVars';
-
-		CategoryTreeCore::setDynamicFilters();
 	}
 
 	/**
