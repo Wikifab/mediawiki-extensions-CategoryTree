@@ -171,9 +171,7 @@ class CategoryTreeCore {
 
 		$wfexploreCategoriesNames['Category'] = wfMessage('dokit-category-title-Categories');
 
-		$values = [];
-		$depth = 20;
-		self::getSubCategoriesRecursive('Categories', $depth, $values);
+		$values = self::getSubCategoriesRecursive('Categories', 20);
 
 		if(!empty($values)){
 			$wfexploreDynamicsFilters['Category'] = [
@@ -191,14 +189,16 @@ class CategoryTreeCore {
 	 * @param $depth
 	 * @param $values
 	 */
-	public static function getSubCategoriesRecursive($category, $depth, &$values){
+	public static function getSubCategoriesRecursive($category, $depth){
 		if($depth === 0){
-			return;
+			return [];
 		}
+		$res = [];
 		$subCategories = self::getSubCategories($category);
 		foreach ($subCategories as $subCategory){
-			self::getSubCategoriesRecursive($subCategory, $depth - 1, $values);
-			$values[$subCategory] = $subCategory;
+			$res = array_merge($res, self::getSubCategoriesRecursive($subCategory, $depth - 1));
+			$res[$subCategory] = $subCategory;
 		}
+		return $res;
 	}
 }
