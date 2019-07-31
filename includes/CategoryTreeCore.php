@@ -179,11 +179,13 @@ class CategoryTreeCore {
 			$values[$category] = $category;
 		}
 
-		$wfexploreDynamicsFilters['Category'] = [
-			'name' => 'Category',
-			'translate_prefix' => 'dokit-category-title-',
-			'values' => $values
-		];
+		if(!empty($values)){
+			$wfexploreDynamicsFilters['Category'] = [
+				'name' => 'Category',
+				'translate_prefix' => 'dokit-category-title-',
+				'values' => $values
+			];
+		}
 
 	}
 
