@@ -48,6 +48,8 @@
 	"category-manuals-header": "Manuels",
 	"category-latestdiscussions-header": "Discussions",
 	"category-latestdiscussions-btn-askquestion": "Poser une question",
+	"category-latestdiscussions-btn-watch": "S'abonner aux discussions",
+	"category-latestdiscussions-btn-unwatch": "Se désabonner des discussions",
 	"apihelp-categorytree-description": "Module interne pour l’extension CategoryTree.",
 	"apihelp-categorytree-summary": "Module interne pour l’extension CategoryTree.",
 	"apihelp-categorytree-param-category": "Titre dans l’espace de noms des catégories, le préfixe sera ignoré s’il est fourni.",
