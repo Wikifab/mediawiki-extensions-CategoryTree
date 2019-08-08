@@ -355,6 +355,13 @@ class CategoryTreeCategoryViewer extends CategoryViewer {
 		$out .= '<h2>';
 		$out .= $this->msg( 'category-latestdiscussions-header' )->parse();
 		$out .= '<a class="btn btn-default pull-right" href="'.$newDiscussionTitle->getLinkURL(['page_title' => $ti]).'">'.wfMessage('category-latestdiscussions-btn-askquestion').'</a>';
+        if($this->getUser()->isWatched($this->title)){
+            $subscribeLink = $this->title->getLinkURL()."?action=unwatch";
+            $out .= '<a class="btn btn-default pull-right" href="'.$subscribeLink.'"><i class="fa fa-rss" aria-hidden="true"></i> '.wfMessage('category-latestdiscussions-btn-unwatch').'</a>';
+        } else {
+            $subscribeLink = $this->title->getLinkURL()."?action=watch";
+            $out .= '<a class="btn btn-default pull-right" href="'.$subscribeLink.'"><i class="fa fa-rss" aria-hidden="true"></i> '.wfMessage('category-latestdiscussions-btn-watch').'</a>';
+        }
 		$out .= '</h2>';
 		$out .= $ld->renderDiscussionsFromCategory($this->getTitle(), 10, 0);
 		$out .= "\n</div>";
