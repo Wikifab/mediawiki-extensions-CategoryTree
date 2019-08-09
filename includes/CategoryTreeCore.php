@@ -162,4 +162,23 @@ class CategoryTreeCore {
         return $subCategories;
     }
 
+    /**
+	 * Put the subcategories of category in values
+	 * @param $category
+	 * @param $depth
+	 * @param $values
+	 */
+	public static function getSubCategoriesRecursive($category, $depth){
+		if($depth === 0){
+			return [];
+		}
+		$res = [];
+		$subCategories = self::getSubCategories($category);
+		foreach ($subCategories as $subCategory){
+			$res = array_merge($res, self::getSubCategoriesRecursive($subCategory, $depth - 1));
+			$res[$subCategory] = $subCategory;
+		}
+		return $res;
+	}
+
 }
