@@ -162,7 +162,7 @@ class CategoryTreeCore {
         return $subCategories;
     }
 
-    /**
+	/**
 	 * Put the subcategories of category in values
 	 * @param $category
 	 * @param $depth
@@ -180,5 +180,4 @@ class CategoryTreeCore {
 		}
 		return $res;
 	}
-
 }
