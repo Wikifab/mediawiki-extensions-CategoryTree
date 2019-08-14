@@ -162,27 +162,6 @@ class CategoryTreeCore {
         return $subCategories;
     }
 
-    /**
-	 * Set the categories for the explore category filter
-	 * @param $categories
-	 */
-	public static function setDynamicFilters(){
-		global $wfexploreDynamicsFilters, $wfexploreCategoriesNames;
-
-		$wfexploreCategoriesNames['Category'] = wfMessage('dokit-category-title-Categories');
-
-		$values = self::getSubCategoriesRecursive('Categories', 20);
-
-		if(!empty($values)){
-			$wfexploreDynamicsFilters['Category'] = [
-				'name' => 'Category',
-				'translate_prefix' => 'dokit-category-title-',
-				'values' => $values
-			];
-		}
-
-	}
-
 	/**
 	 * Put the subcategories of category in values
 	 * @param $category
