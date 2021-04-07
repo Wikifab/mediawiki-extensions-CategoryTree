@@ -26,9 +26,12 @@ class CategoryTreeImageList
             $page = new DokitCategoryPage($title);
             $mainPicture = $page->getMainPicture();
             if(isset($mainPicture)){
+            	// TODO : should replace key by $title->getFullText()
                 $images['Catégorie:'.$subCategory] = $mainPicture->getTitle()->getText();
+                $images[$title->getNsText() . ':' . $subCategory] = $mainPicture->getTitle()->getText();
             } else {
                 $images['Catégorie:'.$subCategory] = null;
+                $images[$title->getNsText() . ':' . $subCategory] = null;
             }
         }
 
